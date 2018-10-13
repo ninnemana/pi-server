@@ -61,6 +61,12 @@ func main() {
 		switch {
 		case certFile == nil || keyFile == nil:
 		default:
+			_, err := tls.LoadX509KeyPair(*certFile, *keyFile)
+			if err != nil {
+				log.Printf("%+v\n", errors.Wrap(err, "certificate files were not valid"))
+				return
+			}
+
 			secure <- errors.Wrap(
 				tlsSrv.ListenAndServeTLS(
 					*certFile,
